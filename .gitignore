@@ -1,0 +1,9 @@
+.env
+.env-*
+secrets
+!secrets/example
+.hypothesis
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo

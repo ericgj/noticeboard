@@ -1,0 +1,5 @@
+newspaper3k
+google-auth
+google-cloud-pubsub
+
+ruamel.yaml
