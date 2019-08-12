@@ -36,9 +36,11 @@ I propose the following workflow:
   1. decrypt secrets
   2. install tox
   3. run tox (which runs linter and tests using the `config/{env}.yaml` env vars)
-  4. deploy function with `config/{env}.yaml` env vars. This will automatically
-     install requirements.txt on Google infrastructure, etc.
-  5. run tox again for an "integration" test environment, which tests hit the 
+  4. deploy the init and actual functions with `config/{env}.yaml` env vars. 
+     This will automatically install requirements.txt for each of them on 
+     Google infrastructure, etc.
+  5. hit the init function to trigger pubsub topic creation, etc.
+  6. run tox again for an "integration" test environment, which tests hit the 
      actual deployed API (e.g. http endpoint or pubsub), and verify logs and/or
      persisted data.
 
@@ -48,7 +50,9 @@ I propose the following workflow:
     - (python37) bash -c "virtualenv .env"
     - (python37) bash -c ". .env/bin/activate && pip install tox"
     - (python37) bash -c ". .env/bin/activate && tox -e unit"
-    - (gcloud)   gcloud functions deploy ... --env-vars-file=config/$_ENV.yaml
+    - (gcloud)   gcloud functions deploy my_function_init_$_ENV --env-vars-file=config/$_ENV.yaml
+    - (gcloud)   gcloud functions deploy my_function_$_ENV --env-vars-file=config/$_ENV.yaml
+    - (gcloud)   gcloud functions call my_function_init_$_ENV
     - (python37) bash -c ". .env/bin/activate && tox -e integration"
 
 
@@ -67,4 +71,13 @@ bunch of containers with e.g. no pubsub between them. At least not without some
 kind of pubsub emulation layer (which I gather the Cloud Functions nodejs people 
 are working on).
 
+## Next steps
+
+Getting set up on Cloud Build feels a bit daunting and not entirely necessary
+at the beginning. We can always `gcloud functions deploy` manually. I think
+the next thing is to deploy and then write the integration tests. Which perhaps
+to be more precise should be called API tests.
+
+I think the manual steps can be implemented as `bin/` shell scripts. Then when
+we move to Cloud Build these can just be ignored, or used as a backup.
 
