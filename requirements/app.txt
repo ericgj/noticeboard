@@ -13,7 +13,7 @@ grpc-google-iam-v1==0.12.3
 grpcio==1.22.0
 idna==2.8
 jieba3k==0.35.1
-lxml==4.4.0
+lxml==4.6.5
 newspaper3k==0.2.8
 nltk==3.4.4
 Pillow==6.1.0
